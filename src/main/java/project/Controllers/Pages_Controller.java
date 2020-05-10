@@ -30,7 +30,28 @@ public class Pages_Controller {
     @GetMapping("/")
     public String gotomain(Map<String,Object> model)
     {
+
+        User curUser;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Iterable<Track> tracks = trackRepo.findTop20ByOrderByRatingDesc();
+
+        if(auth.getName() != "anonymousUser" && auth.getName() != null)
+        {
+            String Name = auth.getName();
+            //System.out.println("Name: " + Name);
+            curUser = usersRepo.findByLoginIs(Name);
+            Set<Track> likedLists = curUser.getLikedLists();
+            for (Track track: tracks) {
+                if (likedLists.contains(track))
+                {
+                    System.out.println(track.isLikes());
+                    track.setLikes(true);
+                }
+
+            }
+
+        }
+
         model.put("tracks", tracks);
         return "main";
     }
@@ -70,7 +91,7 @@ public class Pages_Controller {
         if(auth.getName() != "anonymousUser" && auth.getName() != null)
         {
             String Name = auth.getName();
-            System.out.println("Name: " + Name);
+            //System.out.println("Name: " + Name);
             curUser = usersRepo.findByLoginIs(Name);
             if ( !curUser.getLikedLists().isEmpty())
             {

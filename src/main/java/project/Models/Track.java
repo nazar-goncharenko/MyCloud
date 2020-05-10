@@ -17,6 +17,8 @@ public class Track {
 
     Long rating;
 
+    boolean isLikes;
+
 
 
     public Long getRating() {
@@ -63,5 +65,15 @@ public class Track {
     public void addRating()
     {
         this.rating++;
+    }
+
+    public void remRating(){ this.rating--;}
+
+    public boolean isLikes() {
+        return isLikes;
+    }
+
+    public void setLikes(boolean likes) {
+        isLikes = likes;
     }
 }

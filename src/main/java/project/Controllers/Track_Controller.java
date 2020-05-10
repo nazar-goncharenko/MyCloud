@@ -74,7 +74,7 @@ public class Track_Controller {
             curUser.addLikedTrack(tr1.get());
             usersRepo.save(curUser);
 
-            return "redirect:/playlists";
+            return "redirect:/";
         }
         else
         {

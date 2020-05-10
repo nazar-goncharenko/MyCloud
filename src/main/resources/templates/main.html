@@ -10,6 +10,7 @@
 </head>
 <body>
 
+
 <div th:insert="fragments/header :: header"></div>
 
 
@@ -34,7 +35,7 @@
                                     </td>
                                     <td>
                                         <input type="hidden" th:value="${track.id}" th:name="id">
-                                        <div th:insert="fragments/button :: buttonLike"/>
+                                        <div th:insert="fragments/button :: buttonLike(${track.isLikes()})"/>
                                     </td>
                                 </form>
                             </tr>

@@ -1,7 +1,7 @@
 <html xmlns:th="https://www.thymeleaf.org">
 
 
-<div th:fragment="buttonLike" >
+<div th:fragment="buttonLike(id)" >
     <style>
 
         .btn {
@@ -20,7 +20,13 @@
         }
     </style>
 
-    <button type="submit" class="btn btn-dark btn-circle">Like</button>
+    <div th:if="${id} == false">
+        <button type="submit" class="btn btn-dark btn-circle">Like</button>
+    </div>
+
+    <div th:if="${id} == true">
+        <button type="submit" class="btn btn-dark btn-circle">UnLike</button>
+    </div>
 
 </div>
 

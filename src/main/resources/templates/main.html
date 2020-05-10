@@ -34,7 +34,7 @@
                                     </td>
                                     <td>
                                         <input type="hidden" th:value="${track.id}" th:name="id">
-                                        <button type="submit" >Like</button>
+                                        <div th:insert="fragments/button :: buttonLike"/>
                                     </td>
                                 </form>
                             </tr>

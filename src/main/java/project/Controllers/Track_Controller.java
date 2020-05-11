@@ -2,6 +2,7 @@ package project.Controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -17,10 +18,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Controller
 public class Track_Controller {
@@ -31,21 +29,30 @@ public class Track_Controller {
     @Autowired
     private UsersRepo usersRepo;
 
+    @Value("${upload.path}")
+    private String uploadpath;
+
     private User curUser;
 
     @PostMapping("/adtrack")
     String addfile(@RequestParam("file") MultipartFile file, @RequestParam("name") String name) throws IOException
     {
-
+        System.out.println("HERE #1");
+        File uploadDir = new File(uploadpath);
+        if ( !uploadDir.exists())
+        {
+            uploadDir.mkdir();
+        }
         if(!file.isEmpty())
         {
-            byte[] bytes = file.getBytes();
-            BufferedOutputStream stream =
-                    new BufferedOutputStream(new FileOutputStream(new File("src\\main\\resources\\static\\sounds\\" + name + ".mp3")));
-            stream.write(bytes);
-            stream.close();
-            Track track = new Track(name,"\\sounds\\" + name + ".mp3");
-            trackRepo.save(track);
+            String uuid = UUID.randomUUID().toString();
+            String resultFileName = uuid + "." + file.getOriginalFilename();
+
+            System.out.println(resultFileName);
+            file.transferTo(new File(uploadpath + "/" + resultFileName));
+
+            Track newTrack = new Track(name, resultFileName);
+            trackRepo.save(newTrack);
 
         }
 

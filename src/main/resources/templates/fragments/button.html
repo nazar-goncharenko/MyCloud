@@ -30,7 +30,7 @@
             </td>
             <td>
                 <audio controls>
-                    <source th:src="@{${track.url}}">
+                    <source th:src="'/music/' + ${track.url}">
                     <input type="hidden" th:value="${track.id}" th:name="id">
                 </audio>
             </td>
@@ -47,7 +47,7 @@
             </td>
             <td>
                 <audio controls>
-                    <source th:src="@{${track.url}}">
+                    <source th:src="'/music/' + ${track.url}">
                     <input type="hidden" th:value="${track.id}" th:name="id">
                 </audio>
             </td>

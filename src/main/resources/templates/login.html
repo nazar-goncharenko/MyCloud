@@ -1,29 +1,64 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 <head>
     <title>Spring Security Example </title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        .form-signin
+        {
+            margin-left: 35%;
+            margin-right: 35%;
+            text-align: center;
+            width: 30%;
+            align-content: center;
+            position: absolute;
+            top: 50%;
+            transform: translate(0,-50%);
+        }
+    </style>
 </head>
 <body>
 
 
 <div th:insert="fragments/header :: header"></div>
 <div th:if="${param.error}">
-    Invalid username and password.
+    <div class="text-centre m-3">
+        <h2 align="center">
+            Invalid username and password.
+        </h2>
+    </div>
 </div>
 <div th:if="${param.logout}">
-    You have been logged out.
+    <div class="text-centre m-3">
+        <h2 align="center">
+            You have been logged out.
+        </h2>
+    </div>
 </div>
-<div class="container text-center">
+
+
+<div class="form-signin">
     <form th:action="@{/login}" method="post">
-        <div><label> User Name:<input type="text" name="username"/> </label></div>
-        <div><label> Password : <input type="password" name="password"/> </label></div>
-        <div><input type="submit" value="Sign In"/></div>
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <label for="inputlogin" class="sr-only">Login</label>
+        <input type="text" name="username" id="inputlogin" class="form-control" placeholder="Login" required="" autofocus=""/>
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>
-    <form th:action="@{/register.html}">
-        <button type="submit">Register</button>
+    <form th:action="register" method="get">
+        <button class="btn btn-lg btn-block" type="submit">Register</button>
     </form>
 </div>
+
 </body>
 </html>

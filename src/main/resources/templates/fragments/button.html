@@ -1,7 +1,10 @@
 <html xmlns:th="https://www.thymeleaf.org">
 
 
-<div th:fragment="buttonLike(id)" >
+
+
+
+<div th:fragment="Musicbutton(track)">
     <style>
 
         .btn {
@@ -20,38 +23,38 @@
         }
     </style>
 
-    <div th:if="${id} == false">
-        <button type="submit" class="btn btn-dark btn-circle">Like</button>
+    <div th:if="${track.isLikes()} == false">
+        <form action="/like" method="post">
+            <td>
+                <span th:text="${track.name}"></span>
+            </td>
+            <td>
+                <audio controls>
+                    <source th:src="@{${track.url}}">
+                    <input type="hidden" th:value="${track.id}" th:name="id">
+                </audio>
+            </td>
+            <td>
+                <button type="submit" class="btn btn-dark btn-circle">Like</button>
+            </td>
+        </form>
     </div>
 
-    <div th:if="${id} == true">
-        <button type="submit" class="btn btn-dark btn-circle">UnLike</button>
+    <div th:if="${track.isLikes()} == true">
+        <form action="/unlike" method="post">
+            <td>
+                <span th:text="${track.name}"></span>
+            </td>
+            <td>
+                <audio controls>
+                    <source th:src="@{${track.url}}">
+                    <input type="hidden" th:value="${track.id}" th:name="id">
+                </audio>
+            </td>
+            <td>
+                <button type="submit" class="btn btn-dark btn-circle">Unlike</button>
+            </td>
+        </form>
     </div>
-
 </div>
-
-
-<div th:fragment="buttonUnlike">
-
-    <style>
-
-        .btn {
-            margin: 5px;
-        }
-
-        .btn-circle {
-            width: 50px;
-            height: 50px;
-            border-radius: 35px;
-            text-align: center;
-            padding-left: 0;
-            padding-right: 0;
-            font-size: 16px;
-            white-space: normal;
-        }
-    </style>
-
-    <button type="submit" class="btn btn-dark btn-circle">Unlike</button>
-</div>
-
 

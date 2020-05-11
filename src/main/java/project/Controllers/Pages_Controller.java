@@ -44,7 +44,7 @@ public class Pages_Controller {
             for (Track track: tracks) {
                 if (likedLists.contains(track))
                 {
-                    System.out.println(track.isLikes());
+                    //System.out.println(track.isLikes());
                     track.setLikes(true);
                 }
 
@@ -93,12 +93,14 @@ public class Pages_Controller {
             String Name = auth.getName();
             //System.out.println("Name: " + Name);
             curUser = usersRepo.findByLoginIs(Name);
-            if ( !curUser.getLikedLists().isEmpty())
+            Iterable<Track> likedLists = curUser.getLikedLists();
+            for (Track track: likedLists)
             {
-                System.out.println("NOT EMPTY");
-                Set<Track> likedTracks = curUser.getLikedLists();
-                model.put("likedTracks", likedTracks);
+                track.setLikes(true);
+                //System.out.println(track.getName());
             }
+            model.put("likedTracks", likedLists);
+
             return "/playlists";
         }
         else

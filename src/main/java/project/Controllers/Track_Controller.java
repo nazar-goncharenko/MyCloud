@@ -69,9 +69,41 @@ public class Track_Controller {
 
             String Name = auth.getName();
             curUser = usersRepo.findByLoginIs(Name);
-            Optional<Track> tr1 = trackRepo.findById(ID);
+            Track tr1 = trackRepo.findById(ID).get();
 //            System.out.println(Name + " " + tr1.get().getName() + " " + curUser.getLikedLists().size());
-            curUser.addLikedTrack(tr1.get());
+            curUser.addLikedTrack(tr1);
+            usersRepo.save(curUser);
+
+            return "redirect:/";
+        }
+        else
+        {
+            return "/login";
+        }
+
+    }
+
+
+
+    @PostMapping("/unlike")
+    public String rating_mines(@RequestParam("id") Long ID)
+    {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth.getName() != "anonymousUser" && auth.getName() != null)
+        {
+            Optional<Track> tr = trackRepo.findById(ID);
+            Track new_track = tr.get();
+            new_track.remRating();
+            trackRepo.save(new_track);
+            System.out.println(new_track.getRating());
+            // -------^^^^rating^^^^-----------//
+
+
+            String Name = auth.getName();
+            curUser = usersRepo.findByLoginIs(Name);
+            Track tr1 = trackRepo.findById(ID).get();
+            curUser.getLikedLists().remove(tr1);
+//            System.out.println(Name + " " + tr1.get().getName() + " " + curUser.getLikedLists().size());
             usersRepo.save(curUser);
 
             return "redirect:/";

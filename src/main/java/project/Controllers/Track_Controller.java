@@ -13,6 +13,8 @@ import project.Models.Track;
 import project.Models.User;
 import project.Repositories.TrackRepo;
 import project.Repositories.UsersRepo;
+import project.Service.TrackService;
+import project.Service.UserService;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -29,33 +31,18 @@ public class Track_Controller {
     @Autowired
     private UsersRepo usersRepo;
 
-    @Value("${upload.path}")
-    private String uploadpath;
+    @Autowired
+    private TrackService trackService;
+
+    @Autowired
+    private UserService userService;
 
     private User curUser;
 
-    @PostMapping("/adtrack")
+    @PostMapping("/addtrack")
     String addfile(@RequestParam("file") MultipartFile file, @RequestParam("name") String name) throws IOException
     {
-        System.out.println("HERE #1");
-        File uploadDir = new File(uploadpath);
-        if ( !uploadDir.exists())
-        {
-            uploadDir.mkdir();
-        }
-        if(!file.isEmpty())
-        {
-            String uuid = UUID.randomUUID().toString();
-            String resultFileName = uuid + "." + file.getOriginalFilename();
-
-            System.out.println(resultFileName);
-            file.transferTo(new File(uploadpath + "/" + resultFileName));
-
-            Track newTrack = new Track(name, resultFileName);
-            trackRepo.save(newTrack);
-
-        }
-
+        trackService.addTrack(file,name);
         return"redirect:/";
     }
 
@@ -66,20 +53,9 @@ public class Track_Controller {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth.getName() != "anonymousUser" && auth.getName() != null)
         {
-            Optional<Track> tr = trackRepo.findById(ID);
-            Track new_track = tr.get();
-            new_track.addRating();
-            trackRepo.save(new_track);
-            System.out.println(new_track.getRating());
-            // -------^^^^rating^^^^-----------//
+            trackService.like(ID);
 
-
-            String Name = auth.getName();
-            curUser = usersRepo.findByLoginIs(Name);
-            Track tr1 = trackRepo.findById(ID).get();
-//            System.out.println(Name + " " + tr1.get().getName() + " " + curUser.getLikedLists().size());
-            curUser.addLikedTrack(tr1);
-            usersRepo.save(curUser);
+            userService.playlistAdd(ID,auth.getName());
 
             return "redirect:/";
         }
@@ -98,20 +74,9 @@ public class Track_Controller {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth.getName() != "anonymousUser" && auth.getName() != null)
         {
-            Optional<Track> tr = trackRepo.findById(ID);
-            Track new_track = tr.get();
-            new_track.remRating();
-            trackRepo.save(new_track);
-            System.out.println(new_track.getRating());
-            // -------^^^^rating^^^^-----------//
+            trackService.unlike(ID);
 
-
-            String Name = auth.getName();
-            curUser = usersRepo.findByLoginIs(Name);
-            Track tr1 = trackRepo.findById(ID).get();
-            curUser.getLikedLists().remove(tr1);
-//            System.out.println(Name + " " + tr1.get().getName() + " " + curUser.getLikedLists().size());
-            usersRepo.save(curUser);
+            userService.playlistRemove(ID,auth.getName());
 
             return "redirect:/";
         }

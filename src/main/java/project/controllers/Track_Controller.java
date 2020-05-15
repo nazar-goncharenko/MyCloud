@@ -10,11 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import project.Iservise.ITrackService;
 import project.Iservise.IUserService;
-import project.models.User;
-import project.repositories.TrackRepo;
-import project.repositories.UsersRepo;
-import project.service.TrackService;
-import project.service.UserService;
 
 import java.io.IOException;
 

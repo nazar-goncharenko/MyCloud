@@ -1,43 +1,32 @@
-package project.Controllers;
+package project.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import project.Models.Track;
-import project.Models.User;
-import project.Repositories.TrackRepo;
-import project.Repositories.UsersRepo;
-import project.Service.TrackService;
-import project.Service.UserService;
+import project.Iservise.ITrackService;
+import project.Iservise.IUserService;
+import project.models.User;
+import project.repositories.TrackRepo;
+import project.repositories.UsersRepo;
+import project.service.TrackService;
+import project.service.UserService;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.*;
 
 @Controller
 public class Track_Controller {
 
     @Autowired
-    private TrackRepo trackRepo;
+    private ITrackService trackService;
 
     @Autowired
-    private UsersRepo usersRepo;
+    private IUserService userService;
 
-    @Autowired
-    private TrackService trackService;
-
-    @Autowired
-    private UserService userService;
-
-    private User curUser;
 
     @PostMapping("/addtrack")
     String addfile(@RequestParam("file") MultipartFile file, @RequestParam("name") String name) throws IOException

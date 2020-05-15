@@ -1,22 +1,24 @@
-package project.Service;
+package project.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import project.Models.Track;
-import project.Repositories.TrackRepo;
-import project.Repositories.UsersRepo;
+import project.Iservise.ITrackService;
+import project.models.Track;
+import project.models.User;
+import project.repositories.TrackRepo;
+import project.repositories.UsersRepo;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
-public class TrackService {
+public class TrackService implements ITrackService {
 
     @Autowired
     private TrackRepo trackRepo;
@@ -30,6 +32,7 @@ public class TrackService {
 
 
 
+    @Override
     public void addTrack(MultipartFile file,String name)
     {
         File uploadDir = new File(uploadpath);
@@ -57,6 +60,7 @@ public class TrackService {
         }
     }
 
+    @Override
     public void like(Long ID)
     {
         Optional<Track> tr = trackRepo.findById(ID);
@@ -65,6 +69,7 @@ public class TrackService {
         trackRepo.save(new_track);
     }
 
+    @Override
     public void unlike(Long ID)
     {
         Optional<Track> tr = trackRepo.findById(ID);
@@ -74,6 +79,28 @@ public class TrackService {
         System.out.println(new_track.getRating());
     }
 
+    @Override
+    public Iterable<Track> getTop20()
+    {
+        return trackRepo.findTop20ByOrderByRatingDesc();
+    }
+
+    @Override
+    public void configToUser(Iterable <Track> tracks, String Name)
+    {
+        User curUser = usersRepo.findByLoginIs(Name);
+        Set<Track> likedLists = curUser.getLikedLists();
+        for (Track track: tracks) {
+            if (likedLists.contains(track))
+            {
+                //System.out.println(track.isLikes());
+                track.setLikes(true);
+            }
+
+        }
+
+
+    }
 
 
 }

@@ -1,17 +1,17 @@
-package project.Service;
+package project.service;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
-import project.Models.Track;
-import project.Models.User;
-import project.Repositories.TrackRepo;
-import project.Repositories.UsersRepo;
+import project.Iservise.IUserService;
+import project.models.Track;
+import project.models.User;
+import project.repositories.TrackRepo;
+import project.repositories.UsersRepo;
 
 @Service
-public class UserService {
+public class UserService implements IUserService {
 
     @Autowired
     private TrackRepo trackRepo;
@@ -21,6 +21,17 @@ public class UserService {
 
     @Value("${upload.path}")
     private String uploadpath;
+
+
+    public boolean register(String login,String password)
+    {
+        if ( usersRepo.findByLoginIs(login) != null && password != null)
+        {
+            return false;
+        }
+        usersRepo.save(new User(login,password));
+        return true;
+    }
 
 
     public void playlistAdd(Long ID, String Name)
@@ -37,5 +48,16 @@ public class UserService {
         Track track = trackRepo.findById(ID).get();
         curUser.getLikedLists().remove(track);
         usersRepo.save(curUser);
+    }
+
+    public Iterable<Track> getPlaylist(String Name)
+    {
+        User curUser = usersRepo.findByLoginIs(Name);
+        Iterable<Track> likedLists = curUser.getLikedLists();
+        for (Track track: likedLists)
+        {
+            track.setLikes(true);
+        }
+        return likedLists;
     }
 }
